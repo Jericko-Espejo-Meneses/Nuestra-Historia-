@@ -441,20 +441,49 @@
             41: "De aquí hasta el infinito, cuidándonos y amándonos siempre.\nEres lo más hermoso que me ha pasado.\nTe amo, Joaqui. ❤️"
         };
 
-        // ==========================================
-        // INTERACTIVIDAD: REPRODUCTOR MÚSICA
+     // ==========================================
+        // INTERACTIVIDAD: REPRODUCTOR MÚSICA (Optimizado)
         // ==========================================
         const audio = document.getElementById('bg-audio');
         const musicBtn = document.getElementById('music-btn');
 
+        // Nos aseguramos de que el botón cambie visualmente su icono para saber si está sonando o pausado
+        function actualizarIconoMusica(reproduciendo) {
+            if (reproduciendo) {
+                musicBtn.classList.add('rotating');
+                // Icono de Pausa cuando suena
+                musicBtn.innerHTML = `
+                    <svg viewBox="0 0 24 24" style="width:25px; height:25px; fill:#e5c158;">
+                        <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+                    </svg>
+                `;
+            } else {
+                musicBtn.classList.remove('rotating');
+                // Icono de Play cuando está pausado
+                musicBtn.innerHTML = `
+                    <svg viewBox="0 0 24 24" style="width:25px; height:25px; fill:#e5c158;">
+                        <path d="M8 5v14l11-7z"/>
+                    </svg>
+                `;
+            }
+        }
+
+        // Ejecutar al cargar para que empiece con el icono de "Play"
+        actualizarIconoMusica(false);
+
         function toggleMúsica() {
             if (audio.paused) {
-                audio.play().then(() => {
-                    musicBtn.classList.add('rotating');
-                }).catch(err => console.log("Interacción requerida por navegador para audio"));
+                audio.play()
+                    .then(() => {
+                        actualizarIconoMusica(true);
+                    })
+                    .catch(err => {
+                        console.error("Error al reproducir audio: ", err);
+                        alert("Haz clic de nuevo para activar la música. El navegador requiere interacción.");
+                    });
             } else {
                 audio.pause();
-                musicBtn.classList.remove('rotating');
+                actualizarIconoMusica(false);
             }
         }
 
