@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuestra Historia - Joaqui & Jericko</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Georgia', serif;
+            background-color: #0d0d0d;
+            color: #f5f0eb;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+        header {
+            text-align: center;
+            margin-top: 40px;
+            margin-bottom: 30px;
+        }
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 300;
+            letter-spacing: 3px;
+            color: #e5c158; /* Dorado elegante */
+            margin-bottom: 10px;
+        }
+        p.subtitle {
+            font-style: italic;
+            font-size: 0.9rem;
+            color: #a69f96;
+            margin-bottom: 20px;
+        }
+        .gallery {
+            width: 100%;
+            max-width: 450px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .card {
+            background-color: #1a1a1a;
+            border: 1px solid #2d2d2d;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            transition: transform 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s forwards;
+        }
+        .card img, .card video {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        footer {
+            margin-top: 50px;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #666;
+            letter-spacing: 1px;
+        }
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>NUESTRA HISTORIA</h1>
+        <p class="subtitle">Cada instante contigo es mi favorito.</p>
+    </header>
+
+    <!-- Contenedor donde se renderizan las fotos y videos -->
+    <div class="gallery" id="photo-gallery"></div>
+
+    <footer>
+        <p>Hecho con ❤️ por Jericko — 2026</p>
+    </footer>
+
+    <script>
+        // ==========================================
+        // CONFIGURACIÓN DE INGENIERO
+        // ==========================================
+        
+        const totalElementos = 41; // Tus 41 archivos
+        const carpeta = 'fotos';   // Nombre exacto de tu carpeta
+
+        // El archivo 40 es tu video (.mp4)
+        const indicesVideos = [35,36,37,38,39,40,41]; // Ajusta según tus necesidades
+
+        // ==========================================
+
+        const gallery = document.getElementById('photo-gallery');
+
+        for (let i = 1; i <= totalElementos; i++) {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.style.animationDelay = `${i * 0.15}s`; 
+
+            if (indicesVideos.includes(i)) {
+                // Si es video, creamos el elemento con controles por si acaso
+                const video = document.createElement('video');
+                video.src = `${carpeta}/${i}.mp4`;
+                video.autoplay = true;
+                video.loop = true;
+                video.muted = true;
+                video.playsInline = true; 
+                video.controls = true; // Agrega play/pausa para asegurar que se pueda reproducir si el navegador se pone pesado
+                
+                card.appendChild(video);
+            } else {
+                // Si es foto, usamos un sistema inteligente de respaldo (Fallback)
+                const img = document.createElement('img');
+                img.src = `${carpeta}/${i}.jpeg`; // Intento 1: .jpeg
+                img.alt = `Momento ${i}`;
+                img.loading = 'lazy'; 
+
+                // Si falla al cargar .jpeg, intenta con .jpg
+                img.onerror = function() {
+                    if (this.src.endsWith('.jpeg')) {
+                        this.src = `${carpeta}/${i}.jpg`; // Intento 2: .jpg
+                    } else if (this.src.endsWith('.jpg')) {
+                        this.src = `${carpeta}/${i}.png`; // Intento 3: .png
+                    }
+                };
+
+                card.appendChild(img);
+            }
+
+            gallery.appendChild(card);
+        }
+    </script>
+    </script>
+</body>
+</html>
