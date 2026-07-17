@@ -42,10 +42,11 @@
         }
         .gallery {
             width: 100%;
-            max-width: 450px;
+            max-width: 450px; /* Tamaño base en celulares */
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 30px;
+            transition: max-width 0.3s ease;
         }
         .card {
             background-color: #1a1a1a;
@@ -57,12 +58,62 @@
             opacity: 0;
             transform: translateY(20px);
             animation: fadeInUp 0.8s forwards;
+            display: flex;
+            flex-direction: column; /* Por defecto en móvil: uno abajo del otro */
+        }
+        .media-container {
+            width: 100%;
+            display: block;
         }
         .card img, .card video {
             width: 100%;
             height: auto;
             display: block;
         }
+        /* Contenedor del poema */
+        .poem-container {
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            border-top: 1px solid #2d2d2d; /* Línea divisoria en móvil */
+            background-color: #151515;
+        }
+        .poem-text {
+            font-style: italic;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #e5c158; /* Color dorado suave */
+            white-space: pre-line; /* Respeta los saltos de línea de los poemas */
+        }
+
+        /* ==========================================
+           PANTALLAS GRANDES (LAPTOPS / TABLETS)
+           ========================================== */
+        @media (min-width: 768px) {
+            .gallery {
+                max-width: 900px; /* Expandimos la galería para el diseño lado a lado */
+            }
+            .card {
+                flex-direction: row; /* Lado a lado */
+                align-items: stretch;
+            }
+            .media-container {
+                width: 50%; /* La mitad para la foto */
+            }
+            .poem-container {
+                width: 50%; /* La otra mitad para el poema */
+                padding: 40px;
+                border-top: none;
+                border-left: 1px solid #2d2d2d; /* Línea divisoria vertical */
+            }
+            .poem-text {
+                font-size: 1.1rem;
+            }
+        }
+
         footer {
             margin-top: 50px;
             margin-bottom: 30px;
@@ -101,8 +152,58 @@
         const totalElementos = 41; // Tus 41 archivos
         const carpeta = 'fotos';   // Nombre exacto de tu carpeta
 
-        // El archivo 40 es tu video (.mp4)
-        const indicesVideos = [35,36,37,38,39,40,41]; // Ajusta según tus necesidades
+        // El archivo 35 al 41 son videos (.mp4)
+        const indicesVideos = [35,36,37,38,39,40,41]; 
+
+        // ==========================================
+        // DICCIONARIO DE POEMAS Y FRASES (1 al 41)
+        // Ya viene con todo el floro de nivel Dios incluido.
+        // ==========================================
+        const poemas = {
+            1: "En tu mirada encontré mi lugar favorito,\nun refugio dulce, tierno e infinito.",
+            2: "El primer día que te vi sonreír,\nsupe que a tu lado quería vivir.",
+            3: "Caminando de tu mano el mundo se detiene,\nno hay tormenta en mi vida que tu amor no frene.",
+            4: "Tu abrazo es mi rincón de paz,\ndonde todo el ruido de afuera se vuelve fugaz.",
+            5: "Cada risa compartida en una tarde cualquiera\nse convierte en mi mejor primavera.",
+            6: "No existen kilómetros ni horas perdidas,\nsi al final del camino nuestras almas quedan unidas.",
+            7: "Tu amor me enseña a ver la vida de otra manera,\nmás bonita, más sincera, más de veras.",
+            8: "A tu lado, los momentos más sencillos del día\nse transforman en la más hermosa poesía.",
+            9: "Tienes el superpoder de hacerme feliz con solo mirarme,\ny el tierno vicio de siempre enamorarme.",
+            10: "Elegirte a ti ha sido, sin duda alguna,\nmi mayor acierto bajo la luz de la luna.",
+            11: "Podrá caerse el cielo o temblar el suelo entero,\npero a tu lado yo sé que nada temo.",
+            12: "Eres esa casualidad que no estaba buscando,\npero que terminó salvándome y cambiándolo todo.",
+            13: "Si me dieran a elegir una vida de nuevo,\nte buscaría más rápido para amarte primero.",
+            14: "Me encantan tus detalles, tus gestos al hablar,\ny esa forma tan tuya de hacerme soñar.",
+            15: "Nuestras miradas se entienden sin decir una palabra,\nes la magia más hermosa que nuestro pecho guarda.",
+            16: "En este mundo de prisas y de tanto correr,\ntú eres el único puerto donde quiero volver.",
+            17: "Gracias por tu paciencia, tu ternura y tu calor,\npor ser mi compañera, mi cómplice y mi amor.",
+            18: "Cada foto contigo guarda un pedacito de felicidad,\nun instante atrapado para toda la eternidad.",
+            19: "Eres mi cable a tierra, mi calma y mi alegría,\nla persona que ilumina de colores mi día.",
+            20: "Qué bonito es saber que en las buenas y en las malas,\ntengo tu mano lista para darme alas.",
+            21: "Nuestra historia no tiene que ser perfecta,\ncon que sea nuestra, para mí es la correcta.",
+            22: "Amo cómo eres cuando nadie más te ve,\ntu lado más tierno, el que siempre cuidaré.",
+            23: "Me haces querer ser una mejor versión de mí,\nsolo para darte la felicidad que mereces vivir.",
+            24: "Que el tiempo pase y nos llene de arrugas la piel,\nmientras nuestro amor se mantenga dulce y fiel.",
+            25: "Tu sonrisa es mi combustible de cada mañana,\nla melodía más dulce que entra por mi ventana.",
+            26: "No hay día gris si estás tú para pintarlo,\nni obstáculo grande si juntos vamos a superarlo.",
+            27: "Tu corazón y el mío laten al mismo compás,\ny sé que donde vayas, yo te seguiré detrás.",
+            28: "Eres mi rincón favorito en todo el planeta,\nla respuesta más hermosa a lo que el alma busca.",
+            29: "Un día nos encontramos casi sin querer,\ny hoy no imagino un mañana sin tu ser.",
+            30: "Quédate con quien te mire como yo te miro a ti,\ncon el alma entera y el corazón feliz.",
+            31: "La vida es más bonita si la caminamos juntos,\npaso a paso, coleccionando mundos.",
+            32: "Cada recuerdo contigo es un tesoro sin igual,\nel inicio de un viaje que no tiene final.",
+            33: "Amo tus locuras, tus risas y tu forma de amar,\neres el hogar más cálido que pude encontrar.",
+            34: "Por mil momentos más coleccionando sonrisas,\nsin miedos, sin dudas y sin tener prisas.",
+            
+            // Sección de videos (más dinámicas, enfocadas al movimiento y risas)
+            35: "Verte reír en movimiento es mi escena favorita,\nesa alegría tuya que a mí me resucita.",
+            36: "Guardar estos instantes vivos es mi mayor obsesión,\nporque en cada segundo late fuerte mi corazón.",
+            37: "Nuestra complicidad grabada en un instante eterno,\npara recordar lo bonito de este amor tan tierno.",
+            38: "Risas espontáneas, miradas que lo dicen todo,\nnuestra forma de querernos a nuestro propio modo.",
+            39: "Cada paso que damos nos acerca más al futuro,\nun camino de tu mano que es mi lugar más seguro.",
+            40: "Tenerte cerca es todo lo que necesito para estar bien,\neres mi principio, mi mitad y mi final también.",
+            41: "De aquí hasta el infinito, cuidándonos y amándonos siempre.\nEres lo más hermoso que me ha pasado.\nTe amo, Joaqui. ❤️"
+        };
 
         // ==========================================
 
@@ -113,39 +214,54 @@
             card.className = 'card';
             card.style.animationDelay = `${i * 0.15}s`; 
 
+            // Contenedor para que la foto o video ocupe exactamente el 50% en pantallas grandes
+            const mediaContainer = document.createElement('div');
+            mediaContainer.className = 'media-container';
+
             if (indicesVideos.includes(i)) {
-                // Si es video, creamos el elemento con controles por si acaso
                 const video = document.createElement('video');
                 video.src = `${carpeta}/${i}.mp4`;
                 video.autoplay = true;
                 video.loop = true;
                 video.muted = true;
                 video.playsInline = true; 
-                video.controls = true; // Agrega play/pausa para asegurar que se pueda reproducir si el navegador se pone pesado
+                video.controls = true; 
                 
-                card.appendChild(video);
+                mediaContainer.appendChild(video);
             } else {
-                // Si es foto, usamos un sistema inteligente de respaldo (Fallback)
                 const img = document.createElement('img');
-                img.src = `${carpeta}/${i}.jpeg`; // Intento 1: .jpeg
+                img.src = `${carpeta}/${i}.jpeg`; 
                 img.alt = `Momento ${i}`;
                 img.loading = 'lazy'; 
 
-                // Si falla al cargar .jpeg, intenta con .jpg
                 img.onerror = function() {
                     if (this.src.endsWith('.jpeg')) {
-                        this.src = `${carpeta}/${i}.jpg`; // Intento 2: .jpg
+                        this.src = `${carpeta}/${i}.jpg`; 
                     } else if (this.src.endsWith('.jpg')) {
-                        this.src = `${carpeta}/${i}.png`; // Intento 3: .png
+                        this.src = `${carpeta}/${i}.png`; 
                     }
                 };
 
-                card.appendChild(img);
+                mediaContainer.appendChild(img);
             }
+
+            card.appendChild(mediaContainer);
+
+            // Generamos la sección del poema/frase para la tarjeta
+            const poemContainer = document.createElement('div');
+            poemContainer.className = 'poem-container';
+
+            const poemParagraph = document.createElement('p');
+            poemParagraph.className = 'poem-text';
+            
+            // Si definiste un texto para este número, lo pone; si no, deja un mensaje por defecto.
+            poemParagraph.textContent = poemas[i] || `Momento único contigo... ❤️`;
+
+            poemContainer.appendChild(poemParagraph);
+            card.appendChild(poemContainer);
 
             gallery.appendChild(card);
         }
-    </script>
     </script>
 </body>
 </html>
