@@ -170,7 +170,7 @@
             white-space: pre-line; 
         }
 
-        /* ========== OPCIÓN 2: DISEÑO DEL SOBRE Y CARTA INTERACTIVA ========== */
+        /* ========== DISEÑO DEL SOBRE Y CARTA INTERACTIVA ========== */
         .envelope-section {
             width: 100%;
             max-width: 450px;
@@ -230,40 +230,6 @@
         }
         @keyframes blink {
             50% { opacity: 0; }
-        }
-
-        /* ========== OPCIÓN 1: BOTÓN FLOTANTE MÚSICA ========== */
-        .music-control {
-            position: fixed;
-            bottom: 25px;
-            right: 25px;
-            width: 55px;
-            height: 55px;
-            border-radius: 50%;
-            background-color: #1a1a1a;
-            border: 2px solid #e5c158;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            z-index: 100;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-            transition: transform 0.3s ease;
-        }
-        .music-control:hover {
-            transform: scale(1.1);
-        }
-        .music-control svg {
-            width: 25px;
-            height: 25px;
-            fill: #e5c158;
-        }
-        .rotating {
-            animation: rotateVinyl 3s linear infinite;
-        }
-        @keyframes rotateVinyl {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
         }
 
         /* ==========================================
@@ -326,15 +292,6 @@
     <!-- Capa para corazones flotantes -->
     <div class="heart-bg" id="heart-bg"></div>
 
-    <!-- REPRODUCTOR FLOTANTE DE MÚSICA (Audio Invisible) -->
-    <audio id="bg-audio" src="musica.mp3" loop></audio>
-    <div class="music-control" id="music-btn" onclick="toggleMúsica()">
-        <!-- Ícono del vinilo/nota musical -->
-        <svg viewBox="0 0 24 24" id="play-icon">
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 14.5c0 .83-.67 1.5-1.5 1.5s-1.5-.67-1.5-1.5.67-1.5 1.5-1.5 1.5.67 1.5 1.5zm0-4.5c0 .55-.45 1-1 1s-1-.45-1-1V8c0-.55.45-1 1-1s1 .45 1 1v4z"/>
-        </svg>
-    </div>
-
     <header>
         <h1>NUESTRA HISTORIA</h1>
         <p class="subtitle">Cada instante contigo es mi favorito.</p>
@@ -390,7 +347,7 @@
         const indicesVideos = [35,36,37,38,39,40,41]; 
 
         // ==========================================
-        // TEXTO DE TU CARTA DIGITAL (Efecto máquina de escribir)
+        // TEXTO DE TU CARTA DIGITAL
         // ==========================================
         const textoCarta = `Hola, mi Joaqui hermosa... ❤️\n\nSi estás leyendo esto, significa que lograste escanear el QR que puse en tu cajita. Quería hacer algo totalmente diferente para ti, algo que no pudieras encontrar en ninguna tienda del mundo, porque lo que siento por ti tampoco es algo común.\n\nDesde aquel 18 de abril de 2026 en el que nos conocimos, mi vida tomó un rumbo mucho más bonito y lleno de luz. Cada uno de los 41 momentos que ves arriba (y todos los que nos faltan guardar) representan los instantes en los que me he sentido el chico más afortunado del planeta a tu lado.\n\nA veces me cuesta expresar todo lo que siento con palabras en el día a día, o me dices que solo soy detallista en momentos especiales, pero con esto quería demostrarte que pienso en ti a cada hora, y que soy capaz de sentarme días enteros a diseñar, escribir y programar un universo entero solo para verte sonreír.\n\nGracias por ser mi patito, mi cómplice y mi lugar seguro. Prometo seguir llenando esta página (y nuestras vidas) de muchos más recuerdos, risas, viajes y amor.\n\nTe amo con todo mi corazón, hoy, mañana y para siempre. 💕\n\nTu Jericko. 🦆🐥`;
 
@@ -441,55 +398,6 @@
             41: "De aquí hasta el infinito, cuidándonos y amándonos siempre.\nEres lo más hermoso que me ha pasado.\nTe amo, Joaqui. ❤️"
         };
 
-     // ==========================================
-        // INTERACTIVIDAD: REPRODUCTOR MÚSICA (ULTRA FIX)
-        // ==========================================
-        const audio = document.getElementById('bg-audio');
-        const musicBtn = document.getElementById('music-btn');
-        let músicaActivadaPorClicGlobal = false;
-
-        function actualizarIconoMusica(reproduciendo) {
-            if (reproduciendo) {
-                musicBtn.classList.add('rotating');
-                musicBtn.innerHTML = `
-                    <svg viewBox="0 0 24 24" style="width:25px; height:25px; fill:#e5c158;">
-                        <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
-                    </svg>
-                `;
-            } else {
-                musicBtn.classList.remove('rotating');
-                musicBtn.innerHTML = `
-                    <svg viewBox="0 0 24 24" style="width:25px; height:25px; fill:#e5c158;">
-                        <path d="M8 5v14l11-7z"/>
-                    </svg>
-                `;
-            }
-        }
-
-        function toggleMúsica() {
-            músicaActivadaPorClicGlobal = true; 
-            if (audio.paused) {
-                audio.play().then(() => actualizarIconoMusica(true)).catch(err => console.log("Interacción requerida"));
-            } else {
-                audio.pause();
-                actualizarIconoMusica(false);
-            }
-        }
-
-        // ACTIVAR AL PRIMER CLIC EN CUALQUIER PARTE DE LA PÁGINA
-        document.body.addEventListener('click', function() {
-            if (!músicaActivadaPorClicGlobal) {
-                audio.play()
-                    .then(() => {
-                        músicaActivadaPorClicGlobal = true;
-                        actualizarIconoMusica(true);
-                    })
-                    .catch(err => {
-                        console.error("Error de reproducción: ", err);
-                    });
-            }
-        }, { once: true });
-
         // ==========================================
         // INTERACTIVIDAD: CARTA TIPO MÁQUINA DE ESCRIBIR
         // ==========================================
@@ -499,17 +407,16 @@
             const container = document.getElementById('letter-container');
             const target = document.getElementById('typed-text');
             
-            btn.style.display = 'none'; // Desaparece el botón
-            container.style.display = 'block'; // Muestra el contenedor
+            btn.style.display = 'none'; 
+            container.style.display = 'block'; 
             
-            // Función de escritura en cascada
             function escribir() {
                 if (indexTexto < textoCarta.length) {
                     target.textContent += textoCarta.charAt(indexTexto);
                     indexTexto++;
-                    setTimeout(escribir, 45); // Velocidad de tecleado (45ms por letra)
+                    setTimeout(escribir, 45); 
                 } else {
-                    document.getElementById('cursor-elem').style.display = 'none'; // Quita el cursor al terminar
+                    document.getElementById('cursor-elem').style.display = 'none'; 
                 }
             }
             escribir();
