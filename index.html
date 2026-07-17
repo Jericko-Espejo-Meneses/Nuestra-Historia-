@@ -442,16 +442,15 @@
         };
 
      // ==========================================
-        // INTERACTIVIDAD: REPRODUCTOR MÚSICA (Optimizado)
+        // INTERACTIVIDAD: REPRODUCTOR MÚSICA (ULTRA FIX)
         // ==========================================
         const audio = document.getElementById('bg-audio');
         const musicBtn = document.getElementById('music-btn');
+        let músicaActivadaPorClicGlobal = false;
 
-        // Nos aseguramos de que el botón cambie visualmente su icono para saber si está sonando o pausado
         function actualizarIconoMusica(reproduciendo) {
             if (reproduciendo) {
                 musicBtn.classList.add('rotating');
-                // Icono de Pausa cuando suena
                 musicBtn.innerHTML = `
                     <svg viewBox="0 0 24 24" style="width:25px; height:25px; fill:#e5c158;">
                         <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
@@ -459,7 +458,6 @@
                 `;
             } else {
                 musicBtn.classList.remove('rotating');
-                // Icono de Play cuando está pausado
                 musicBtn.innerHTML = `
                     <svg viewBox="0 0 24 24" style="width:25px; height:25px; fill:#e5c158;">
                         <path d="M8 5v14l11-7z"/>
@@ -468,24 +466,29 @@
             }
         }
 
-        // Ejecutar al cargar para que empiece con el icono de "Play"
-        actualizarIconoMusica(false);
-
         function toggleMúsica() {
+            músicaActivadaPorClicGlobal = true; 
             if (audio.paused) {
-                audio.play()
-                    .then(() => {
-                        actualizarIconoMusica(true);
-                    })
-                    .catch(err => {
-                        console.error("Error al reproducir audio: ", err);
-                        alert("Haz clic de nuevo para activar la música. El navegador requiere interacción.");
-                    });
+                audio.play().then(() => actualizarIconoMusica(true)).catch(err => console.log("Interacción requerida"));
             } else {
                 audio.pause();
                 actualizarIconoMusica(false);
             }
         }
+
+        // ACTIVAR AL PRIMER CLIC EN CUALQUIER PARTE DE LA PÁGINA
+        document.body.addEventListener('click', function() {
+            if (!músicaActivadaPorClicGlobal) {
+                audio.play()
+                    .then(() => {
+                        músicaActivadaPorClicGlobal = true;
+                        actualizarIconoMusica(true);
+                    })
+                    .catch(err => {
+                        console.error("Error de reproducción: ", err);
+                    });
+            }
+        }, { once: true });
 
         // ==========================================
         // INTERACTIVIDAD: CARTA TIPO MÁQUINA DE ESCRIBIR
