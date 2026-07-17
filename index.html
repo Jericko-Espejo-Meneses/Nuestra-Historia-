@@ -112,6 +112,126 @@
             color: #a69f96;
         }
 
+        /* ========== SECCIÓN DEL JUEGO: ¿ME AMAS? ========== */
+        .game-section {
+            background: rgba(26, 26, 26, 0.9);
+            border: 1px solid rgba(229, 193, 88, 0.4);
+            border-radius: 15px;
+            padding: 25px;
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+            margin-bottom: 35px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.6);
+            z-index: 10;
+            position: relative;
+        }
+        .game-title {
+            font-size: 1.4rem;
+            color: #e5c158;
+            margin-bottom: 20px;
+            font-family: 'Georgia', serif;
+        }
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            height: 60px;
+            position: relative;
+        }
+        .game-btn {
+            padding: 12px 30px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 25px;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.2s ease, background-color 0.3s ease;
+            font-family: 'Georgia', serif;
+        }
+        .btn-yes {
+            background-color: #e5c158;
+            color: #0d0d0d;
+            box-shadow: 0 5px 15px rgba(229, 193, 88, 0.4);
+        }
+        .btn-yes:hover {
+            transform: scale(1.1);
+            background-color: #f7d66f;
+        }
+        .btn-no {
+            background-color: #333;
+            color: #f5f0eb;
+            position: absolute;
+            transition: all 0.15s ease;
+        }
+
+        /* Mensaje de Amor Exitoso */
+        .love-alert {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            background: rgba(20, 20, 20, 0.95);
+            border: 2px solid #e5c158;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            z-index: 9999;
+            box-shadow: 0 10px 40px rgba(229, 193, 88, 0.3);
+            width: 90%;
+            max-width: 400px;
+            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        @keyframes popIn {
+            to {
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+        .love-alert h2 {
+            color: #e5c158;
+            margin-bottom: 15px;
+            font-size: 1.6rem;
+        }
+        .love-alert p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .love-alert-btn {
+            background: #e5c158;
+            color: #0d0d0d;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: 'Georgia', serif;
+        }
+
+        /* ========== CONFETI DIGITAL ========== */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background-color: #e5c158;
+            pointer-events: none;
+            z-index: 9998;
+            animation: fall 3s linear infinite;
+        }
+        @keyframes fall {
+            0% {
+                transform: translateY(-50px) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* ========== GALERÍA ========== */
         .gallery {
             width: 100%;
             max-width: 450px; 
@@ -236,7 +356,7 @@
            PANTALLAS GRANDES (LAPTOPS / TABLETS)
            ========================================== */
         @media (min-width: 768px) {
-            .gallery, .envelope-section {
+            .gallery, .envelope-section, .game-section {
                 max-width: 900px; 
             }
             .card {
@@ -320,6 +440,22 @@
         </div>
     </header>
 
+    <!-- ========== JUEGO DEL BOTÓN TRAVIESO ========== -->
+    <section class="game-section">
+        <h2 class="game-title">Joaqui, ¿me amas? 🥺👉👈</h2>
+        <div class="btn-container" id="btn-container">
+            <button class="game-btn btn-yes" onclick="declaracionAmor()">¡SÍ!</button>
+            <button class="game-btn btn-no" id="btn-no" onmouseover="escaparBoton()" onclick="escaparBoton()" ontouchstart="escaparBoton(event)">NO</button>
+        </div>
+    </section>
+
+    <!-- Cartel Sorpresa del Sí -->
+    <div class="love-alert" id="love-alert">
+        <h2>¡SABÍA QUE SÍ! 😍❤️</h2>
+        <p>¡Yo también te amo con toda mi alma, mi patito hermoso! Eres lo más bonito de mi vida entera. 🦆🐥💕</p>
+        <button class="love-alert-btn" onclick="cerrarSorpresa()">¡Te amo!</button>
+    </div>
+
     <!-- Contenedor de galería -->
     <div class="gallery" id="photo-gallery"></div>
 
@@ -345,6 +481,65 @@
         const totalElementos = 41; 
         const carpeta = 'fotos';   
         const indicesVideos = [35,36,37,38,39,40,41]; 
+
+        // ==========================================
+        // JUEGO: EL BOTÓN TRAVIESO
+        // ==========================================
+        const btnNo = document.getElementById('btn-no');
+        const btnContainer = document.getElementById('btn-container');
+
+        // Inicializamos el botón No en su sitio
+        btnNo.style.left = "60%";
+        btnNo.style.top = "10px";
+
+        function escaparBoton(event) {
+            if (event) {
+                event.preventDefault(); // Previene zoom o scroll molesto en celulares
+            }
+            
+            const containerWidth = btnContainer.offsetWidth;
+            const containerHeight = btnContainer.offsetHeight;
+            const btnWidth = btnNo.offsetWidth;
+            const btnHeight = btnNo.offsetHeight;
+
+            // Calculamos posiciones aleatorias seguras que no se salgan del contenedor del juego
+            const maxLeft = containerWidth - btnWidth - 10;
+            const maxTop = containerHeight - btnHeight - 5;
+
+            const randomLeft = Math.floor(Math.random() * Math.max(10, maxLeft));
+            const randomTop = Math.floor(Math.random() * Math.max(5, maxTop));
+
+            btnNo.style.left = `${randomLeft}px`;
+            btnNo.style.top = `${randomTop}px`;
+        }
+
+        // Lluvia de confeti
+        function crearConfeti() {
+            const colores = ['#e5c158', '#f5f0eb', '#ff4d6d', '#ffb3c1', '#ffd166'];
+            for (let i = 0; i < 100; i++) {
+                setTimeout(() => {
+                    const confeti = document.createElement('div');
+                    confeti.className = 'confetti';
+                    confeti.style.left = Math.random() * 100 + 'vw';
+                    confeti.style.backgroundColor = colores[Math.floor(Math.random() * colores.length)];
+                    confeti.style.width = Math.random() * 12 + 6 + 'px';
+                    confeti.style.height = confeti.style.width;
+                    confeti.style.animationDuration = Math.random() * (4 - 2) + 2 + 's';
+                    
+                    document.body.appendChild(confeti);
+                    setTimeout(() => confeti.remove(), 4000);
+                }, i * 15);
+            }
+        }
+
+        function declaracionAmor() {
+            document.getElementById('love-alert').style.display = 'block';
+            crearConfeti();
+        }
+
+        function cerrarSorpresa() {
+            document.getElementById('love-alert').style.display = 'none';
+        }
 
         // ==========================================
         // TEXTO DE TU CARTA DIGITAL
@@ -386,7 +581,7 @@
             29: "Un día nos encontramos casi sin querer,\ndonde hoy no imagino un mañana sin tu ser.",
             30: "Quédate con quien te mire como yo te miro a ti,\ncon el alma entera y el corazón feliz.",
             31: "La vida es más bonita si la caminamos juntos,\npaso a paso, coleccionando mundos.",
-            32: "Cada recuerdo contigo es un tesoro sin igual,\nel inicio de un viaje que no tiene final.",
+            32: "Cada recuerdo contigo es un tesoro sin igual,\el inicio de un viaje que no tiene final.",
             33: "Amo tus locuras, tus risas y tu forma de amar,\neres el hogar más cálido que pude encontrar.",
             34: "Por mil momentos más coleccionando sonrisas,\nsin miedos, sin dudas y sin tener prisas.",
             35: "Verte reír en movimiento es mi escena favorita,\nesa alegría tuya que a mí me resucita.",
